@@ -1,0 +1,289 @@
+Linux command
+find -type f | wc -l ## number of files recursively 
+######### Deployment Octopus ##########
+OCTOPUS  https://octopus.decryptex.com/app#/Spaces-42/projects/ecomms-api/deployments
+Team City http://teamcity.devacaalpha.com:8118/login.html
+
+#### GIT - Resolve conflict from master to integration
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line
+
+#### Opensearch ####
+AWS IP check >curl https://checkip.amazonaws.com (to get OSD IP
+https://rc.ecomms.devacaalpha.com/
+https://stg-ecomms.compliancealpha.com/
+###### RC #################
+curl -XGET -u 'admin:6F8_WTE1~xb5=0`Fm.>32PC8,:Tx$X' 'https://vpc-ecomms-opensearch-rc-zwdr7wqmmo45cbandruk32e52m.us-east-1.es.amazonaws.com/_cat/count/archive-ecomms-test'
+
+#### create index
+curl -XPUT -u 'admin:6F8_WTE1~xb5=0`Fm.>32PC8,:Tx$X' 'https://vpc-ecomms-opensearch-rc-zwdr7wqmmo45cbandruk32e52m.us-east-1.es.amazonaws.com/archive-ecomms-test' -H 'Content-Type: application/json' -d '{"settings": {"analysis":{"analyzer":{"default_analyzer":{ "type":"custom","tokenizer":"letter","filter":["lowercase","porter_stem"]},"exact_match_analyzer":{ "type":"custom","tokenizer":"classic","filter":["lowercase"]}}}},"mappings": {"properties": {"index_name": {"type": "keyword"},"aca_message_guid": {"type": "keyword"},"bucket_name": {"type": "keyword"},"object_key": {"type": "keyword"},"source_id": {"type": "keyword"},"subject": {"type":"text","fields":{"raw": {"type":"keyword"}},"analyzer":"default_analyzer","store":true},"sender_address": {"type":"text","fields":{"raw": {"type":"keyword"}},"analyzer":"exact_match_analyzer","store":true},"recipients_address": {"type":"text","analyzer":"exact_match_analyzer","store":true},"sent_date": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},"received_date": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},"message_size": {"type": "integer"},"num_of_attachments": {"type": "integer"},"size_of_attachments": {"type": "integer"},"interaction_recipient_count": {"type": "integer"}}}}'
+
+
+
+##### QA ################
+https://qa.ecomms.devacaalpha.com/
+user Kishor.mendhekar@acaglobal.com
+
+curl -XGET -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/_cluster/settings?pretty&include_defaults'
+### List indices
+curl -XGET -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/_aliases'
+
+
+### Create index
+without alias
+curl -XPUT -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/archive-abcd-advisor' -H 'Content-Type: application/json' -d '{"settings": {"analysis":{"analyzer":{"default_analyzer":{ "type":"custom","tokenizer":"letter","filter":["lowercase","porter_stem"]},"exact_match_analyzer":{ "type":"custom","tokenizer":"classic","filter":["lowercase"]}}}},"mappings": {"properties": {"index_name": {"type": "keyword"},"aca_message_guid": {"type": "keyword"},"bucket_name": {"type": "keyword"},"object_key": {"type": "keyword"},"source_id": {"type": "keyword"},"subject": {"type":"text","fields":{"raw": {"type":"keyword"}},"analyzer":"default_analyzer","store":true},"sender_address": {"type":"text","fields":{"raw": {"type":"keyword"}},"analyzer":"exact_match_analyzer","store":true},"recipients_address": {"type":"text","analyzer":"exact_match_analyzer","store":true},"sent_date": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},"received_date": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},"message_size": {"type": "integer"},"num_of_attachments": {"type": "integer"},"size_of_attachments": {"type": "integer"},"interaction_recipient_count": {"type": "integer"}}}}'
+
+curl -XPUT -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/archive-abcdef' -d '{"settings": {"index": {"number_of_shards": 2,"number_of_replicas": 1}},"mappings": {"properties": {"index_name":{"type": "text"},"aca_message_guid":{"type": "text"},"bucket_name":{"type": "text"},"object_key":{"type": "text"},"source_id":{"type": "text"},"subject":{"type": "text","fielddata":true},"sender_address":{"type": "keyword"},"recipients_address":{"type": "keyword"},"sent_date":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"received_date":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"message_size":{"type": "integer"},"num_of_attachments":{"type": "integer"},"size_of_attachments":{"type": "integer"}}}}' -H 'Content-Type: application/json'
+
+curl -XPUT -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/archive-abcdef' -d '{"settings": {"index": {"number_of_shards": 2,"number_of_replicas": 1}},"mappings": {"properties": {"index_name":{"type": "text"},"aca_message_guid":{"type": "text"},"bucket_name":{"type": "text"},"object_key":{"type": "text"},"source_id":{"type": "text"},"subject":{"type": "text","fielddata":true},"sender_address":{"type": "keyword"},"recipients_address":{"type": "keyword"},"sent_date":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"received_date":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"message_size":{"type": "integer"},"num_of_attachments":{"type": "integer"},"size_of_attachments":{"type": "integer"}}},"aliases": {"archive-abcdef": {}}}' -H 'Content-Type: application/json'
+curl -XPUT -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/archive-abcdef-2022' -d '{"settings": {"index": {"number_of_shards": 2,"number_of_replicas": 1}},"mappings": {"properties": {"index_name":{"type": "text"},"aca_message_guid":{"type": "text"},"bucket_name":{"type": "text"},"object_key":{"type": "text"},"source_id":{"type": "text"},"subject":{"type": "text","fielddata":true},"sender_address":{"type": "keyword"},"recipients_address":{"type": "keyword"},"sent_date":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"received_date":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"message_size":{"type": "integer"},"num_of_attachments":{"type": "integer"},"size_of_attachments":{"type": "integer"}}},"aliases": {"archive-abcdef-2022": {}}}' -H 'Content-Type: application/json'
+### delete index 
+curl -XDELETE -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/archive-abcdef' -H "content-type: application/json" -d '{"actions": [{"remove": {"index": "archive-abcdef","alias": "archive-abcdef"}}]}'
+
+
+### search
+curl -XGET -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/archive-abcdef?pretty'
+curl -XGET -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/_search?index=archive-abcdef&pretty' -H "content-type: application/json" -d '{"query": {"match": {"subject": "Job"}}}'
+
+curl -XGET -u 'admin:RtckhrOq8e3ZP:~A3J4s6!c9Ep,..J' 'https://vpc-ecomms-opensearch-qa-5z4jq4ejjk3hmh4w77sap77reu.us-east-1.es.amazonaws.com/_search?index=archive-abcdef&pretty' -H "content-type: application/json" -d '{"query": {"match": {"subject": "Job"}}}'
+
+####### Dev #############
+Download the root cert
+>aws --region us-east-1 acm get-certificate --certificate-arn arn:aws:acm:us-east-1:12345:certificate/abcdefg --output text > aws-cert-chain.pem
+### get cluster info - browser
+curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_cluster/settings?pretty&include_defaults'
+
+### List indices
+curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_aliases'
+
+#### Create template #####
+curl -XPUT -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_index_template/template_archive_catelasv800' -H 'Content-Type: application/json' -d '{"index_patterns": ["archive-catelasv800-*"],"template": {"aliases": {"archive-catelasv800":{}},"settings": {"analysis":{"analyzer":{"default_analyzer":{ "type":"custom","tokenizer":"letter","filter":["lowercase","porter_stem"]},"exact_match_analyzer":{ "type":"custom","tokenizer":"classic","filter":["lowercase"]}}}},"mappings": {"properties": {"index_name": {"type": "keyword"},"aca_message_guid": {"type": "keyword"},"bucket_name": {"type": "keyword"},"object_key": {"type": "keyword"},"source_id": {"type": "keyword"},"source_type_id": {"type": "text"},"subject": {"type":"text","fields":{"raw": {"type":"keyword"}},"analyzer":"default_analyzer","store":true},"sender_address": {"type":"text","fields":{"raw": {"type":"keyword"}},"analyzer":"exact_match_analyzer","store":true},"recipients_address": {"type":"text","analyzer":"exact_match_analyzer","store":true},"sent_date": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},"received_date": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},"message_size": {"type": "integer"},"num_of_attachments": {"type": "integer"},"size_of_attachments": {"type": "integer"},"interaction_recipient_count": {"type": "integer"}}}}}'
+
+### List templates
+ curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_cat/templates'
+
+### Delete index_template
+ curl -XDELETE -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_index_template/template_archive_catelasv910'
+ 
+#### Create Policy  ####
+curl -XPUT -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_plugins/_ism/policies/policy_archive_7yrs' -H 'Content-Type: application/json' -d '{"policy": {"description": "archieve 7yrs policy","default_state": "hot","states": [{"name": "hot", "actions": [{"replica_count": {"number_of_replicas": 1}}], "transitions": [{"state_name": "warm","conditions": {"min_index_age": "1d"}}]},{"name": "warm","actions": [{"force_merge": {"max_num_segments": 1}},{"replica_count": {"number_of_replicas": 0}},{"warm_migration": {},"retry": {"count": 5,"delay": "1h"}}],"transitions": [{"state_name": "cold","conditions": {"min_index_age": "3d"}}]}, {"name": "cold","actions": [{"cold_migration": {"timestamp_field": "@timestamp"}}],"transitions": [{"state_name": "delete","conditions": {"min_index_age": "7d"}}]},{"name": "delete","actions": [{"cold_delete": {}}]}],"ism_template": [{"index_patterns": ["archive-*"],"priority": 90}]}}'
+
+### List ISM policy if any in place
+ curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/.opendistro-ism-config/_search'
+
+### List policy associated
+curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_plugins/_ism/explain/test1-*?pretty'
+
+### delete polcy ####
+curl -XDELETE -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_plugins/_ism/policies/policy_archive_7yrs' 
+
+#### add or remove aliases ###
+curl -XPOST -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_aliases' -H 'Content-Type: application/json' -d '{"actions": [{"add": {"index": "archive-catelasv800","alias": "archive-catelasv800"}}]}'
+
+### Create index
+curl -XPUT -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/archive-catelasv800' -H 'Content-Type: application/json' -d '{"settings": {"analysis":{"analyzer":{"default_analyzer":{ "type":"custom","tokenizer":"letter","filter":["lowercase","porter_stem"]},"exact_match_analyzer":{ "type":"custom","tokenizer":"classic","filter":["lowercase"]}}}},"mappings": {"properties": {"index_name": {"type": "keyword"},"aca_message_guid": {"type": "keyword"},"bucket_name": {"type": "keyword"},"object_key": {"type": "keyword"},"source_id": {"type": "keyword"},"source_type_id": {"type": "text"},"subject": {"type":"text","fields":{"raw": {"type":"keyword"}},"analyzer":"default_analyzer","store":true},"sender_address": {"type":"text","fields":{"raw": {"type":"keyword"}},"analyzer":"exact_match_analyzer","store":true},"recipients_address": {"type":"text","analyzer":"exact_match_analyzer","store":true},"sent_date": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},"received_date": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},"message_size": {"type": "integer"},"num_of_attachments": {"type": "integer"},"size_of_attachments": {"type": "integer"},"interaction_recipient_count": {"type": "integer"}}}}'
+
+### List Cold storage ####
+curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_cold/indices/_search?pretty'
+
+### Migrate from Cold to Warm  and check status 
+curl -XPOST -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_cold/migration/_warm' -H 'Content-Type: application/json' -d '{"indices": "archive-catelasv800-2022.04.22"}'
+
+### Check status on Cold to warm Migration
+curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_cold/migration/archive-catelasv800-2022.04.22/_status'
+
+### add mappings
+curl -XPUT -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/archive-catelasv800/_mapping' -H 'Content-Type: application/json' -d '{"properties": {"interaction_recipient_count": {"type": "integer"}}}'
+
+### Delete Index
+curl -XDELETE -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/archive-catelasv11' -H "content-type: application/json" -d '{"actions": [{"remove": {"index": "archive-catelasv11","alias": "archive-catelasv11"}}]}'
+### Testing loading json
+>  curl -XPUT -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/catelasv900-archive/_doc/1' -d '{"indexName":"catelasv900-archive"}' -H 'Content-Type: application/json'
+
+### Move cold to uwarm
+curl -XPOST -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_cold/migration/_warm' -H "content-type: application/json" -d '{"indices": "archive-catelasv800,archive-catelasv801"}'
+
+### check shards sttaus ####
+curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_cat/shards?h=index,shard,prirep,state,unassigned.reason'
+
+### search the data
+curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_cat/count/archive-nileshclient1'
+>  curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_search?index=archive-catelasv800&pretty'
+>  curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_plugins/_sql?format=json' -H "content-type: application/json" -d '{"query": "SELECT * FROM archive-catelasv800 LIMIT 10"}'
+#### SQL also works
+> curl -XPOST -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_plugins/_sql -k -H 'Content-Type: application/json' -d '{"query": "SELECT * FROM archive-catelasv800 LIMIT 10"}'
+### settings for the index
+> curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/archive-catelasv800?pretty'
+
+### search match phrase
+>  curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_search?index=archive-catelasv800&pretty' -H "content-type: application/json" -d '{"query": {"match_phrase": {"subject": "Dow and S&P 500 slip from records to start the week"}}}'
+
+{"from":0,"size":10000,"sort": {"sent_date": {"order": "desc"}}, "query": {"bool": {"must": [{"match": {"subject":"job"}},{"range": {"sent_date": {"gte": "2021-08-08 00:00:00","lt": "2021-08-09 00:00:00"}}}]}}},{"range": {"sent_date": {"gte": "2022-04-01 00:00:00","lt": "2022-04-01 00:00:00"}}}
+
+### Exclusion
+{"from":0,"size":10000,"query": {"bool": {"must": [{"match": {"subject":"job"}},{"range": {"sent_date": {"gte": "2021-08-07 20:00:00"}}}],"must_not":[{"terms": {"aca_message_guid":["8d1ef8e3-a0ab-0a94-b612-7799a0b2148d","2e3fdc6e-9a76-6ca2-6584-5da7fd97f291"]}}]}},"fields": ["bucket_name","object_key"],"_source":false}
+
+### Sort
+{"sort": {"sent_date": {"order": "desc"}}, "query": {"bool": {"must": [{"match": {"subject":"Value Kansei"}}]}}}
+### Selected fields
+{"sort": {"sent_date": {"order": "desc"}}, "query": {"bool": {"must": [{"match": {"subject":"Value Kansei"}}]}},"fields": ["recipients_address"],"_source": false}
+### Date range
+{"sort": {"sent_date": {"order": "desc"}}, "query": {"bool": {"must": [{"match": {"subject":"Value Kansei"}},{"range": {"sent_date": {"gte": "2021-08-09 15:15:30","lte": "2021-08-09 20:01:26"}]}}}
+### for Text field need to add fielddata=true in index to enable sorting which creates inverted index on that field
+{"sort": {"subject": {"order": "asc"}}, "query": {"bool": {"must": [{"match": {"subject":"Value Kansei"}},{"range": {"sent_date": {"gte": "2021-08-09 15:15:30","lte": "2021-08-09 20:01:26"}}}]}}}
+
+
+### search date range
+> curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_search?index=catelasv11-archive&pretty' -H "content-type: application/json" -d '{"query": {"range": {"sentdate": {"lte": "2021-08-09 20:01:26","gte": "2021-08-09 15:15:30"}}}}'
+>  curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_search?index=archive-catelasv800&pretty' -H "content-type: application/json" -d '{"query":{"match": {"subject":"Value Kansei"}}}'
+>  curl -XGET -u 'admin:6ap*n0w{[CBsUQ.6r>.SUk_8VBaN<|' 'https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_search?index=archive-catelasv800&pretty' -H "content-type: application/json" -d '{"query":{ "bool":{ "must":[{"match": {"subject":"Value Kansei"}},{"range": {"sent_date": {"lte": "2021-08-09 20:01:26","gte": "2021-08-09 15:15:30"}}}]}}}'
+catelasv800-archive
+"%{[@metadata][indexName]}"
+
+### Create role  ###
+https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_plugins/_security/api/roles/role_catelasv800_read
+{
+  "index_permissions": [{
+    "index_patterns": [
+      "archive-catelasv800-*"
+    ],
+    "dls": "",
+    "fls": [],
+    "masked_fields": [],
+    "allowed_actions": [
+      "read"
+    ]
+  }]
+}
+
+### Create user ###
+https://search-opensearch-ecomms-dev-h47lelbebjoexvwhdl766a4idm.us-east-1.es.amazonaws.com/_plugins/_security/api/internalusers/kishor
+{
+  "password": "P@ssword123",
+  "opendistro_security_roles": ["role_catelasv800_read"],
+  "backend_roles": ["role_catelasv800_read"],
+  "attributes": {
+    "purpose": "read_only_user",
+    "index": "archive-catelasv800"
+  }
+}
+
+#### sorting the fields in opensearch #####
+"Text fields are not optimised for operations that require per-document field data like aggregations and sorting, 
+so these operations are disabled by default. Please use a keyword field instead. Alternatively, set fielddata=true on [subject] in order to load field data by uninverting the inverted index. 
+Note that this can use significant memory."
+#### Refer for opensearch output plugin https://github.com/opensearch-project/logstash-output-opensearch/blob/main/README.md
+
+### S3 batch job ####
+aws s3control create-job --region us-east-1 --account-id 925226733450 \
+    --operation '{"S3InitiateRestoreObject": {"ExpirationInDays": 5,"GlacierJobTier": "BULK"}}' \
+     --manifest '{"Spec":{"Format":"S3BatchOperations_CSV_20180820","Fields":["Bucket","Key"]},"Location":{"ObjectArn":"arn:aws:s3:::s3-all-client-archive-k/restore/manifestFiles/archiveextract_4.csv","ETag":"5a2a7f5a8d4579ce3705584afed4db17"}}' \
+     --report '{"Bucket":"arn:aws:s3:::s3-all-client-archive-k","Prefix":"batch-job-reports", "Format":"Report_CSV_20180820","Enabled":true,"ReportScope":"AllTasks"}' \
+     --priority 42 \
+     --role-arn 'arn:aws:iam::925226733450:role/EC2S3FullAccess_k' \
+     --client-request-token $(uuidgen) \
+     --description "job Description" \
+     --no-confirmation-required
+	 
+from Java = c79babd3-0390-4b09-89e9-6c7a75ae5299
+
+########## Openserach links ###########
+Michael Douglas - Google Link https://drive.google.com/drive/folders/1kXof0J2OTToow7j6BfTvoGmT4TC3WNtq
+https://eliatra.com/blog/security-opensearch-concepts/ --> security explained
+https://docs.aws.amazon.com/opensearch-service/latest/developerguide/configuration-samples.html --> AWS help including java programs
+https://opensearch.org/docs/latest/ --> APIs for testing
+https://opensearch.org/docs/latest/opensearch/query-dsl/full-text/ --> searching 
+https://www.elastic.co/guide/en/logstash/current/keystore.html  - use secrets
+https://discuss.opendistrocommunity.dev/t/ism-policy-rollover/6589/8 - ISM (Index State Management) policy
+
+https://noise.getoto.net/tag/amazon-opensearch/
+
+#### AWS extended SQS java lib to process larger message in S3 #####################
+https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-s3-messages.html
+
+######### ISM policies examples ##########
+https://noise.getoto.net/2021/12/21/automating-index-state-management-for-amazon-opensearch-service-successor-to-amazon-elasticsearch-service/
+
+ 
+### Install docker-compose
+>curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+>chmod +x /usr/local/bin/docker-compose
+>docker-compose version
+ 
+### Catelas - just to deploy Haraka
+>cd /opt/catelas/ecomms/_docker
+>docker-compose build haraka && docker-compose up haraka
+
+### manually running docker containers 
+>docker exec -it 2ed33a2fe810 /bin/bash
+>./swaks --to kishor@trustwebtech.com --from kmendhekar1980@gmail.com --header-X-Test "test email" --body "THIS IS BODY Of EMAIL" --port 2525 --add-header "X-ECOMMS-CLIENT-NAME: client_a"
+>./swaks -s localhost -f kmendhekar@gmail.com -t kishor.mendhekar@acaglobal.com
+
+
+### Kill all the containers
+> docker kill $(docker ps -q)
+> docker rm $(docker ps -a -q)
+> docker volume prune
+docker exec -it <container_id> /bin/bash
+docker cp <container_id>:<container_folder> <host_folder>
+
+http://34.233.165.19:18080/catelas/jsp/admin/index.jsp
+
+### Checking CLI access
+> aws s3 ls
+> aws ecr describe-images --repository-name aca/ecomms-haraka
+
+
+######### Steps ######
+### copy catelas
+### build catelas
+> cd /opt/catelas/catelas
+> gradle clean build dist -x test 
+### create dir /opt/catelas/ecomms/_docker/local-containers-shared-fs
+### start docker service
+
+https://opensource.com/article/19/7/create-pull-request-github
+
+
+########### Angular - Catelas-UI ############
+### yarn is required (fater yarn install close and reopen Code to get refersh (Refresh button doesn't work properly)
+> npm -g install yarn
+> yarn install
+## build the package ### need to be in project dir in C:\work\repo\catelas-ui\alpha-ui (open command prompt from Code)
+> npm run build:standalone
+#### Run the project
+> npm run start:standalone
+
+change environment.standalone.ts
+ECOMMS_URI: 'ecomms/api',
+change environment.default.ts
+eCommsURI: 'http://localhost:8090'
+
+
+Check version of nodejs --> node –version
+Check version of npm --> npm –version
+Install angular --> npm install -g @angular/cli
+Check angular version --> ng –version
+Install test karma and jasmin --> npm install karma karma-chrome-launcher karma-jasmine
+
+####### Run locally - java class ############
+### make sure all the jars in on classpath
+C:\work\local\test>java -classpath C:\work\local\test\jar\* com.catelas.archive.S3ArchiveIngestionSqsApplication
+
+exclude '**/*'
+
+### github
+git push --set-upstream origin feature/move_reports_to_s3
+
+############# run java programs
+java -cp file.jar;dir/* my.app.ClassName
+
+#### Create V3 SSL cert with test CA ####
+openssl genrsa -des3 -out kishor-test2.pem 2048
+openssl rsa -in kishor-test2.pem -out kishor-test2.key
+openssl req -new –sha256 -addext -key kishor-test2.key -out kishor-test2.csr -extensions v3_req -config ../conf/openssl.cnf
+openssl req -text -noout -verify -in kishor-test2.csr -config ../conf/openssl.cnf
+openssl x509 -req –sha256 -days 1095 -in kishor-test2.csr -CA cacert.crt -CAkey cakey.key -CAcreateserial -out kishor-test2.crt -extfile ../conf/openssl.cnf
+
+
+
+

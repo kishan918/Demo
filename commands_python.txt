@@ -1,0 +1,71 @@
+1 python
+   2 more readme.md
+   3 more setup.py
+   4 pip instal pytest
+   5 pip install pytest
+   6 pip install pytz
+   7 pip install psutil
+   8 more readme.md
+   9  more setup.py
+  10 pip install black
+  11 pip install importlib_metadata
+  12 pip install xmldict
+  13 pip install xmltodict
+  14 pip install wheel
+  15 pip install .
+  16 metadata_mapper.exe
+  17 set path=%path%;    def set_software(self, file):
+  18 set path=%path%;    def set_software(self, file):
+  19 C:\Users\Kishor.mendhekar\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts\metadata_mapper
+  20 mkdir C:\\catelas\\shared\\scripts\\metadata_mapper\\metadata_mapper\\logging
+  
+  ### To create new virtuel environment
+  pip install venv
+  py -3 -m venv .venv
+  
+  
+  re - open the terminal
+  
+  
+      ingestion_dir = os.path.abspath(
+        "C:/work/local/test/mapper/commsftp/Phase2"
+    )
+	# output folder is not being used at the time of mapping, its speechmatics_dir = os.path.abspath("/work/local/test/mapper/uat_input")
+    output_dir = os.path.abspath(
+        "C:/work/local/test/mapper/output"
+    )
+    processed_dir = os.path.abspath(
+        "C:/work/local/test/mapper/processed"
+    )
+    log_dir = os.path.abspath(
+        "C:/work/local/test/mapper/logging"
+    )
+	
+	C:\Users\Kishor.mendhekar\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts\metadata_mapper
+	
+	ingestion_sub_dir = file.file_dir.replace("directories.ingestion_mapping_dir", "") 
+	
+##### New changes	
+			# "/metadata_mapper/test_pkg/sample_data",
+	        "/work/local/test/mapper/qa/commsftp/phase2"
+    )
+    output_dir = os.path.abspath(
+        # "/catelas/shared/scripts/metadata_mapper/environment/test_output"
+        "/work/local/test/mapper/qa/mapper_voice_out"
+    )
+    processed_mapping_dir = os.path.abspath(
+        # "/catelas/shared/scripts/metadata_mapper/environment/test_processed"
+        "/work/local/test/mapper/qa/mapper_processed"
+    )
+    log_dir = os.path.abspath(
+        # "/catelas/shared/scripts/metadata_mapper/logging"
+        "/work/local/test/mapper/qa/logging"
+    )
+    speechmatics_in_dir = os.path.abspath(
+        # "/catelas/shared/scripts/metadata_mapper/environment/speechmatics_input"
+        "/work/local/test/mapper/qa/mapper_speechmatics/mapper_input"
+    )
+    speechmatics_out_dir = os.path.abspath(
+        # "/catelas/shared/scripts/metadata_mapper/environment/transcribed"
+        "/work/local/test/mapper/qa/mapper_speechmatics/mapper_output"
+    )

@@ -1,0 +1,86 @@
+Links followed - 
+http://eng.hakopako.net/entry/2016/04/22/172151
+https://github.com/kahing/goofys
+
+Prerequistes - 
+1. Centos
+2. Devstack swift installed
+3, Network configured
+4. EC2 credentials created for admin user and admin project
+
+### Fuse installation on CentOS - AWS
+$ yum update
+$ yum install automake fuse fuse-devel gcc-c++ git libcurl-devel libxml2-devel make openssl-devel
+
+### EFS mount
+# Add file policy system --> edit and add read write for the role associated with  EC2
+# add security group to EC2 instance to allow traffic from EFS
+# create directory efsData and copy the EFS helper mount point
+>  mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 172.29.65.229: /mnt/efs
+
+
+### mount usnig ARN --> need to isnatll amazon-efs-utils
+> mount -t efs -o tls,iam,accesspoint=fsap-0af9fb081479f95f2 fs-00e206e6503576edf:/ /mnt/efs
+### install golang
+## Remove any old version of go
+$ rm -rf /usr/local/go && tar -C /usr/local -xzf go1.19.linux-amd64.tar.gz
+$ yum install golang
+$ go version
+$ export GOPATH=/root/go
+
+### Create shell script to run as service --> create /etc/systemd/system/s3archiveIngestion.service with following code
+[Unit]
+Description=s3archiveIngestion service
+After=network-online.target
+[Service]
+ExecStart=/catelas//catelasjournal/startS3ArchiveIngestion.sh
+[Install]
+WantedBy=multi-user.target
+
+### Install goofys
+$ export GOOFYS_HOME=/root/go/src/github.com/kahing/goofys/
+$ cd /root/go/src/github.com/kahing/goofys
+$ git submodule init
+$ git submodule update
+$ go install /root/go/src/github.com/kahing/goofys/
+$ export PATH=$PATH:/root/go/bin/
+$ goofys --version
+
+#### Create credentials file ### No need if using IAM roles
+$ mkdir /mnt/goofys
+$ mkdir .aws/
+$vi .aws/credentials
+[s3]
+aws_access_key_id=cc23c795b989428485d154146ab3580a
+aws_secret_access_key=2d99150c7f994ee4841c97fc73925e6f
+
+6. Mount the bucket - 
+
+### make sure to create directory, directory should exists
+
+$ goofys --region us-east-1 --profile s3 --endpoint  https://s3.amazonaws.com  s31-2-catelasv800-surveillance /opt/s3-mount/s31-2-catelasv800-surveillance
+### to unmount
+$ umount /opt/s3mount/surveillance-bucket
+$ rm -rf /opt/s3mount/surveillance-bucket
+
+### Check if its mounted
+
+
+7. Check if its mounted - 
+[root@devstack ~]# df -kh
+Filesystem                        Size  Used Avail Use% Mounted on
+/dev/mapper/centos_devstack-root   28G  4.7G   23G  18% /
+devtmpfs                          1.9G     0  1.9G   0% /dev
+tmpfs                             1.9G  8.0K  1.9G   1% /dev/shm
+tmpfs                             1.9G   96M  1.8G   6% /run
+tmpfs                             1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/sda1                         497M  140M  358M  29% /boot
+/dev/loop0                        6.0G   46M  6.0G   1% /opt/stack/data/swift/drives/sdb1
+tmpfs                             380M     0  380M   0% /run/user/0
+jani                              1.0P     0  1.0P   0% /mnt/goofys
+
+
+Tried multiple parameters allow_other, directory and file permissions-
+$GOPATH/bin/goofys --region RegionOne --profile s3 -o allow_other --dir-mode 777 --file-mode 777 --debug_fuse --debug_s3 --endpoint  http://IP:8080/ jani /mnt/goofys
+
+Issues faced during installation - Noticed go get command failed due to time issue

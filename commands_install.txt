@@ -1,0 +1,179 @@
+My IP 173.66.57.82
+scp
+>C:\work\local>pscp -i kishor_catelas_archive.ppk -r catelas ec2-user@34.233.165.19: ### ssh private key for EC2 instance 
+#### Install AWS CLI V2 on linux ########
+> curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+>unzip awscliv2.zip
+>sudo ./aws/install
+AWS CLI - verify user making request and logged in is the same user
+>aws iam list-access-keys
+>aws sts get-caller-identity --profile=ecomms
+
+#### S3 apis
+> aws s3api head-object --bucket s3-all-client-archive-k --key a51a4051-74b9-11ec-9d65-12a0b33a323b/1/2021_9_9_09/29609369-ecae-e46d-66f6-00854a4f2aed.eml
+
+### list versions
+>aws s3api list-object-versions --bucket s3-all-client-archive-k --prefix  a51a4051-74b9-11ec-9d65-12a0b33a323b/1/2021_9_9_09/29609369-ecae-e46d-66f6-00854a4f2aed.eml
+
+### FTP client on CentOS EC2
+> yum install lftp
+>lftp 3.95.121.39 -u kishore -e "set ftp:ssl-allow no;"  ### (Account need to be created on Filezilla FTP server with username and need to make directory available to teh user
+> ls>  get journal_archive.zip
+
+### Check ports
+> netstat -nat | grep 3306
+> netstat -tuplen
+>netstat -ntlp
+
+>df -hT
+>
+
+> ls | wc -l
+>find . -type f | wc -l ###(count all including subfolder)
+
+### get the service logs service name =catelasjournal
+> journalctl --unit=catelasjournal > out.log
+
+
+### Install openjdk11 on centos
+> amazon-linux-extras install java-openjdk11
+> java -version 
+
+### Install Nodejs
+>yum install -y gcc-c++ make
+>curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash -  ### This will give the command to install nodejs if its available
+>yum install -y nodejs
+
+### Install gradle
+>wget https://services.gradle.org/distributions/gradle-7.2-all.zip
+>unzip gradle-7.2-all.zip
+>ln -s gradle-7.2 gradle
+>printf "export GRADLE_HOME=/opt/gradle\nexport PATH=\$PATH:\$GRADLE_HOME/bin\n" > /etc/profile.d/gradle.sh
+>source /etc/profile.d/gradle.sh
+>gradle -v
+
+######### Install MySQL 8 ##############
+> yum install https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+> amazon-linux-extras install epel -y
+>yum install mysql-community-server
+>systemctl start mysqld 
+>grep 'temporary password' /var/log/mysqld.log ##### Temporary password
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass'
+########## S3 #########################
+>aws s3 ls s3://s3-all-client-archive-k --recursive --human-readable --summarize
+
+########## Logstash #################
+download and install public private key
+>rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+> cd /etc/yum.repos.d
+
+> vi logstash.repo
+[logstash-7.x]
+name=Elastic repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+
+#### for version 8 ####
+[logstash-8.x]
+name=Elastic repository for 8.x packages
+baseurl=https://artifacts.elastic.co/packages/8.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+
+>yum install logstash
+>systemctl start logstash
+
+## Testing
+> cd /usr/share/logstash
+> bin/logstash -e "input { stdin { } } output { stdout {} }"
+
+## List the installed plugins
+> bin/logstash-plugin list
+
+## Install new plugin
+> bin/logstash-plugin install logstash-output-opensearch
+
+if update logstash then update opensearch plugin also
+and update pluguiin for openssl diff version requirement
+>/usr/share/logstash/bin/logstash-plugin update
+################# GIT #############
+git clone -b bug/CAT-3344 https://github.com/ACA-Group/catelas.git
+git clone -b Feature/OpensearchExtractBackend https://github.com/ACA-Group/catelas-ui.git
+2022.3_merge_k
+
+#### Merging to seperate branch - resolving conflict ########
+create branch like 2022.3_merge_k from origin or barnch - here its branch release/2022.4
+git clone -b 2022.3_merge_k https://github.com/ACA-Group/catelas.git
+### merge intehration into your branch
+git clone -b 2022.3_merge_k https://github.com/ACA-Group/catelas.git
+git push
+### Then create PR and then someone needs to approve it
+
+
+Step 1: From your project repository, bring in the changes and test.
+git fetch origin
+git checkout -b integration origin/integration
+git merge release/2022.4
+
+Step 2: Merge the changes and update on GitHub.
+git checkout release/2022.4
+git merge --no-ff integration
+git push origin release/2022.4
+########## Docker #################
+### Install docker agent
+ > yum update -y
+ > yum install docker -y
+ > docker ps -a ###(you'll see Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+ >service docker status
+ >service docker start
+ >docker images
+ >docker container ls
+ > docker stop <container_id>
+ 
+ >docker pull logstash:7.17.0 (Note: docker pull logstash did not work because latest tag is not supported)
+ >docker run --rm -it -v ~/pipeline/:/usr/share/logstash/pipeline/ logstash:7.17.0
+ >vi Dockerfile
+FROM docker.elastic.co/logstash/logstash:7.17.0
+RUN rm -f /usr/share/logstash/pipeline/logstash.conf
+ADD pipeline/ /usr/share/logstash/pipeline/
+ADD config/ /usr/share/logstash/config/
+RUN cp logstash-archive-sqs-1.conf /usr/share/logstash/pipeline
+
+> docker build -t logstash-aca-ecomms-dev .  ### need to run from /opt where Dockerfile is
+> docker run -d --name logstash-docker logstash-aca-ecomms-dev
+> cd /var/lib/docker/containers/
+### importing docker image 
+>docker import --change 'CMD ["/catelas/qrtz"]' ecomms-messageprocessor.tar stg-dckr-img:2022.7.1
+ >docker images
+ > docker rmi <image_id>>
+ > docker run -it --rm tomcat:9.0
+ > docker run -it --rm --name tomcat-container -p 8080:8080 tomcat:latest
+ > docker run -d -it --name tomcat-container -p 127.0.0.1:8080:8080 tomcat:latest
+ > docker inspect tomcat | grep -i address
+ >docker inspect containerI
+ > docker stop
+ > netstat -ntlp
+ >docker image rm aca/ecomms-haraka
+ 
+ >docker exec -it <container_id> /bin/bash
+ > docker-compose up haraka --build -d
+### delete images, all dangling build cache), it will ask Y/N
+>docker image prune -f -a
+
+### remove volumes not used by container (all stopped containers,all networks not used by at least one container,
+### all dangling images,
+>docker volume prune
+
+###
+>docker system prune
+
+### jump into docker container
+> docker ps  (get the container_id)
+docker exec -ti 152aef8ca51e /bin/bash
